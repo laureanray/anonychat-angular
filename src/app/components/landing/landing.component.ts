@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {SocketIoService} from '../../services/socket-io.service';
 import {Update} from '../../interfaces/update';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-landing',
@@ -12,12 +13,20 @@ export class LandingComponent implements OnInit {
   room: string;
   connectedUsers = 0;
   isButtonDisabled = true;
+  socket: SocketIOClient.Socket;
 
-  constructor(private socketIoService: SocketIoService) {  }
+  constructor(private socketIoService: SocketIoService,
+              private router: Router) {
+    this.socket = socketIoService.getSocket();
+  }
 
   ngOnInit(): void {
-    this.socketIoService.getIoInstance().on('update', (update: Update) => {
+    this.socket.on('update', (update: Update) => {
       this.connectedUsers = update.connectedClients;
+    });
+
+    this.socket.on('connect', () => {
+      console.log(this.socket.id);
     });
   }
 
@@ -29,6 +38,6 @@ export class LandingComponent implements OnInit {
   }
 
   onEnter() {
-    console.log(this.enterAs, this.room);
+    this.router.navigate(['/chat-room']);
   }
 }

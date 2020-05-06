@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
-import * as io from 'socket.io-client';
+import * as SocketIO from 'socket.io-client';
 import { environment } from '../../environments/environment';
-
 @Injectable({
   providedIn: 'root'
 })
 export class SocketIoService {
-  ioInstance: any;
+  socket: SocketIOClient.Socket;
 
   constructor() {
-    this.ioInstance = io(environment.serverURL);
-    console.log(this.ioInstance);
+    this.socket = SocketIO(environment.serverURL);
   }
 
-  getIoInstance(): any {
-    return this.ioInstance;
+  getSocket(): SocketIOClient.Socket {
+    return this.socket;
   }
 }
