@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1, 
+  "version": 1,
   "newProjectRoot": "projects",
   "projects": {
     "anonychat-angular": {
@@ -28,7 +28,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.sass"
+              "src/styles/_fonts.scss",
+              "src/styles/_variables.sass",
+              "src/styles/styles.sass"
             ],
             "scripts": []
           },
@@ -123,6 +125,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "anonychat-angular"
+    }
+  },
+  "defaultProject": "anonychat-angular",
+  "cli": {
+    "analytics": false
+  }
 }
