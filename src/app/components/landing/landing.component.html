@@ -1,10 +1,11 @@
 <div class="container">
-  <div class="banner">
-    <h1> Anonychat </h1>
-    <p> Chat anonymously. </p>
+  <div class="landing">
+    <div class="banner">
+      <h1> Anonychat </h1>
+      <p> Chat anonymously. </p>
+    </div>
+    <input (keyup)="onInputChange($event)" type="text" placeholder="Enter as" [(ngModel)]="username">
+    <input (keyup)="onInputChange($event)" type="text" placeholder="Room" [(ngModel)]="room">
+    <button [disabled]="isButtonDisabled" (click)="onEnter()"> Enter. </button>
   </div>
-  <p><span id="number"> {{ connectedUsers }} </span> connected users.</p>
-  <input (keyup)="onInputChange($event)" type="text" placeholder="Enter as" [(ngModel)]="enterAs">
-  <input (keyup)="onInputChange($event)" type="text" placeholder="Room" [(ngModel)]="room">
-  <button [disabled]="isButtonDisabled" (click)="onEnter()"> Enter. </button>
 </div>

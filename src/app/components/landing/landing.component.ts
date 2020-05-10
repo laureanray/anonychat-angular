@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {SocketIoService} from '../../services/socket-io.service';
 import {Update} from '../../interfaces/update';
 import {Router} from '@angular/router';
+import { User } from '../../interfaces/user';
+import {SocketIOService} from '../../services/socket-io';
+import {UserService} from '../../services/user.service';
 
 @Component({
   selector: 'app-landing',
@@ -9,35 +11,44 @@ import {Router} from '@angular/router';
   styleUrls: ['./landing.component.sass']
 })
 export class LandingComponent implements OnInit {
-  enterAs: string;
+  username: string;
   room: string;
-  connectedUsers = 0;
   isButtonDisabled = true;
-  socket: SocketIOClient.Socket;
+  id: string;
+  user: User;
 
-  constructor(private socketIoService: SocketIoService,
+  constructor(public userService: UserService,
+              private socketIoService: SocketIOService,
               private router: Router) {
-    this.socket = socketIoService.getSocket();
   }
 
   ngOnInit(): void {
-    this.socket.on('update', (update: Update) => {
-      this.connectedUsers = update.connectedClients;
-    });
-
-    this.socket.on('connect', () => {
-      console.log(this.socket.id);
-    });
+    this.user = this.userService.getUser();
+    if (this.user) {
+      if (this.user.username) {
+        this.username = this.user.username;
+      }
+      if (this.user.room) {
+        this.router.navigate(['/chat']);
+      }
+    }
   }
 
+
   onInputChange($event) {
-    this.isButtonDisabled = !(this.enterAs && this.room);
+    this.isButtonDisabled = !(this.username && this.room);
     if ($event.key === 'Enter' && !this.isButtonDisabled) {
       this.onEnter();
     }
   }
 
   onEnter() {
-    this.router.navigate(['/chat-room']);
+    const user = new User({
+      username: this.username,
+      room: this.room
+    });
+    this.userService.updateUser(user);
+    this.socketIoService.getSocket().emit('join', this.room);
+    this.router.navigate(['/chat']) ;
   }
 }
